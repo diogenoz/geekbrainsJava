@@ -1,0 +1,41 @@
+package com.geek.dz3.services;
+
+import com.geek.dz3.entities.IComparable;
+import com.geek.dz3.entities.Task;
+import com.geek.dz3.repositories.ITaskRepository;
+import com.geek.dz3.repositories.TaskRepository;
+
+public class TaskService {
+    ITaskRepository repository;
+    int taskCount = 0;
+
+    public void addTask(Task task) {
+        if (!repository.isAllowedAddNewitem()) {
+            System.out.println("Список задач заполнен");
+        } else {
+            boolean isTaskAdded = repository.additem(task);
+        }
+    }
+
+    public TaskService(int taskCount) {
+        this.repository = new TaskRepository(taskCount);
+    }
+
+    public void print() {
+        IComparable[] tasks = this.repository.getItems();
+        if (tasks.length > 0) {
+            System.out.println("Список задач:");
+            for (IComparable task : tasks) {
+                if (task != null) {
+                    System.out.println((Task) task);
+                }
+            }
+        } else {
+            System.out.println("Список задач пуст");
+        }
+    }
+
+    public void deleteTask(Task task) {
+        repository.deleteItem(task);
+    }
+}
