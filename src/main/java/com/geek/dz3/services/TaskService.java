@@ -13,7 +13,7 @@ public class TaskService {
         if (!repository.isAllowedAddNewitem()) {
             System.out.println("Список задач заполнен");
         } else {
-            boolean isTaskAdded = repository.additem(task);
+            boolean isTaskAdded = repository.addItem(task);
         }
     }
 

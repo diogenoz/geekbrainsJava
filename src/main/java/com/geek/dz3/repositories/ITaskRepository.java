@@ -6,7 +6,7 @@ import com.geek.dz3.entities.IComparable;
 public interface ITaskRepository {
     boolean isAllowedAddNewitem();
 
-    boolean additem(IComparable item);
+    boolean addItem(IComparable item);
 
     IComparable[] getItems();
 

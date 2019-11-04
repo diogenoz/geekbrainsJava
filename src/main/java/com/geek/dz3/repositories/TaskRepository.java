@@ -12,7 +12,7 @@ public class TaskRepository implements ITaskRepository {
     }
 
     @Override
-    public boolean additem(IComparable item) {
+    public boolean addItem(IComparable item) {
         if (isAllowedAddNewitem()) {
             for (int i = 0; i < this.items.length; i++) {
                 if (this.items[i] == null) {
