@@ -1,23 +1,29 @@
 package com.geek.dz3.repositories;
 
-import com.geek.dz3.entities.IFindable;
+import com.geek.dz3.entities.FindPatternTask;
+import com.geek.dz3.entities.Task;
 
 public class TaskRepository implements ITaskRepository {
-    private IFindable[] items;
-    private int itemCount = 0;
+    private Task[] tasks;
+    private int taskCount = 0;
 
     @Override
-    public boolean isAllowedAddNewItem() {
-        return itemCount < this.items.length;
+    public boolean isFull() {
+        return taskCount < this.tasks.length;
     }
 
     @Override
-    public boolean addItem(IFindable item) {
-        if (isAllowedAddNewItem()) {
-            for (int i = 0; i < this.items.length; i++) {
-                if (this.items[i] == null) {
-                    this.items[i] = item;
-                    this.itemCount++;
+    public boolean isEmpty() {
+        return this.taskCount == 0;
+    }
+
+    @Override
+    public boolean addTask(Task task) {
+        if (isFull()) {
+            for (int i = 0; i < this.tasks.length; i++) {
+                if (this.tasks[i] == null) {
+                    this.tasks[i] = task;
+                    this.taskCount++;
                     return true;
                 }
             }
@@ -25,20 +31,20 @@ public class TaskRepository implements ITaskRepository {
         return false;
     }
 
-    public TaskRepository(int itemCount) {
-        this.items = new IFindable[itemCount];
+    public TaskRepository(int taskCount) {
+        this.tasks = new Task[taskCount];
     }
 
     @Override
-    public IFindable[] getItems() {
-        return this.items;
+    public Task[] getTasks() {
+        return this.tasks;
     }
 
-    private Integer[] finditems(Object obj) {
-        Integer[] founditems = new Integer[this.items.length];
+    private Integer[] findInnerTasks(Object obj) {
+        Integer[] founditems = new Integer[this.tasks.length];
         int founditemCount = 0;
-        for (int i = 0; i < this.items.length; i++) {
-            if (this.items[i] != null && this.items[i].findByPatternObj(obj)) {
+        for (int i = 0; i < this.tasks.length; i++) {
+            if (this.tasks[i] != null && this.tasks[i].findByPatternObj(obj)) {
                 founditems[founditemCount] = i;
             }
             founditemCount++;
@@ -47,24 +53,27 @@ public class TaskRepository implements ITaskRepository {
     }
 
     @Override
-    public void deleteItem(IFindable obj) {
-        Integer[] founditems = finditems(obj);
-        for (Integer founditem : founditems) {
-            if (founditem != null) {
-                this.items[founditem] = null;
-                this.itemCount--;
+    public int deleteTasks(FindPatternTask findPatternTask) {
+        Integer[] foundTasks = this.findInnerTasks(findPatternTask);
+        int deletedTaskCount = 0;
+        for (Integer founTask : foundTasks) {
+            if (founTask != null) {
+                this.tasks[founTask] = null;
+                this.taskCount--;
+                deletedTaskCount++;
             }
         }
+        return deletedTaskCount;
     }
 
     @Override
-    public IFindable[] findItems(IFindable obj) {
+    public Task[] findTasks(FindPatternTask findPatternTask) {
         int findResultsCount = 0;
-        Integer[] foundItems = finditems(obj);
-        IFindable[] findResults = new IFindable[foundItems.length];
-        for (Integer foundItem : foundItems) {
-            if (foundItem != null) {
-                findResults[findResultsCount] = this.items[foundItem];
+        Integer[] foundTasks = this.findInnerTasks(findPatternTask);
+        Task[] findResults = new Task[foundTasks.length];
+        for (Integer foundTask : foundTasks) {
+            if (foundTask != null) {
+                findResults[findResultsCount] = this.tasks[foundTask];
                 findResultsCount++;
             }
         }

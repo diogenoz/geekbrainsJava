@@ -1,19 +1,20 @@
 package com.geek.dz3.services;
 
-import com.geek.dz3.entities.IFindable;
+import com.geek.dz3.entities.FindPatternTask;
 import com.geek.dz3.entities.Task;
 import com.geek.dz3.repositories.ITaskRepository;
 import com.geek.dz3.repositories.TaskRepository;
 
+import java.util.UUID;
+
 public class TaskService {
     ITaskRepository repository;
-    int taskCount = 0;
 
     public void addTask(Task task) {
-        if (!repository.isAllowedAddNewItem()) {
+        if (!repository.isFull()) {
             System.out.println("Список задач заполнен");
         } else {
-            boolean isTaskAdded = repository.addItem(task);
+            boolean isTaskAdded = repository.addTask(task);
         }
     }
 
@@ -22,12 +23,13 @@ public class TaskService {
     }
 
     public void print() {
-        IFindable[] tasks = this.repository.getItems();
-        if (tasks.length > 0) {
+        if (!this.repository.isEmpty()) {
+            Task[] tasks = this.repository.getTasks();
+
             System.out.println("Список задач:");
-            for (IFindable task : tasks) {
+            for (Task task : tasks) {
                 if (task != null) {
-                    System.out.println((Task) task);
+                    System.out.println(task);
                 }
             }
         } else {
@@ -35,7 +37,19 @@ public class TaskService {
         }
     }
 
-    public void deleteTask(Task task) {
-        repository.deleteItem(task);
+    public int deleteTask(UUID id) {
+        return repository.deleteTasks(new FindPatternTask(id));
+    }
+
+    public int deleteTaskByName(String name) {
+        return repository.deleteTasks(new FindPatternTask(name));
+    }
+
+    public int deleteTaskByOwner(String owner) {
+        return repository.deleteTasks(new FindPatternTask(null, owner, null, null, null));
+    }
+
+    public int deleteTaskByPattern(FindPatternTask findPatternTask) {
+        return repository.deleteTasks(findPatternTask);
     }
 }
