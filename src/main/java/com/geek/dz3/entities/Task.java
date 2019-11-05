@@ -3,6 +3,7 @@ package com.geek.dz3.entities;
 import java.util.UUID;
 
 public class Task implements IFindable {
+
     public enum TaskStatus {
         Open("Open"), InProgress("In Progress"), Done("Done");
         private String statusName;
@@ -16,20 +17,12 @@ public class Task implements IFindable {
         }
     }
 
-    private UUID id;
-    private String name;
+    UUID id;
+    String name;
     private String owner;
     private String assignee;
     private String description;
     private TaskStatus status;
-
-    public Task(UUID id) {
-        this.id = id;
-    }
-
-    public Task(String name) {
-        this.name = name;
-    }
 
     public Task(String name, String owner, String assignee, String description) {
         this.id = UUID.randomUUID();
@@ -40,13 +33,7 @@ public class Task implements IFindable {
         this.status = TaskStatus.Open;
     }
 
-    public Task(String name, String owner, String assignee, String description, TaskStatus status) {
-        this.id = UUID.randomUUID();
-        this.name = name;
-        this.owner = owner;
-        this.assignee = assignee;
-        this.description = description;
-        this.status = status;
+    public Task() {
     }
 
     @Override
@@ -85,7 +72,7 @@ public class Task implements IFindable {
         return String.format("%s, %s, %s, %s, %s", this.id, this.name, this.owner, this.assignee, this.status.getStatusName());
     }
 
-    public String getName() {
+    private String getName() {
         return name;
     }
 
@@ -93,19 +80,23 @@ public class Task implements IFindable {
         return id;
     }
 
-    public String getOwner() {
+    private String getOwner() {
         return owner;
     }
 
-    public String getAssignee() {
+    private String getAssignee() {
         return assignee;
     }
 
-    public String getDescription() {
+    private String getDescription() {
         return description;
     }
 
-    public TaskStatus getStatus() {
+    private TaskStatus getStatus() {
         return status;
+    }
+
+    void setStatus(TaskStatus status) {
+        this.status = status;
     }
 }

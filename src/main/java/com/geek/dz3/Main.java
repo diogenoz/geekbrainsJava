@@ -1,6 +1,7 @@
 package com.geek.dz3;
 
 
+import com.geek.dz3.entities.FindPatternTask;
 import com.geek.dz3.entities.Task;
 import com.geek.dz3.services.TaskService;
 
@@ -22,15 +23,15 @@ public class Main {
         taskService.addTask(new Task("Test" + taskCount + 1, "Den11", "Ivan0", "Test11"));
 
         // delete task test3
-        taskService.deleteTask(new Task(newTaskIds[2]));
+        taskService.deleteTask(new FindPatternTask(newTaskIds[2]));
         taskService.print();
 
         // delete task with name Test5
-        taskService.deleteTask(new Task("Test5"));
+        taskService.deleteTask(new FindPatternTask("Test5"));
         taskService.print();
 
         // delete task with owner Den7
-        taskService.deleteTask(new Task(null, "Den7", null, null, null));
+        taskService.deleteTask(new FindPatternTask(null, "Den7", null, null, null));
         taskService.print();
 
     }
