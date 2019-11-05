@@ -22,17 +22,27 @@ public class Main {
         // should print error
         taskService.addTask(new Task("Test" + taskCount + 1, "Den11", "Ivan0", "Test11"));
 
+        // delete task by random Id
+        System.out.println("Deleted " + taskService.deleteTask(UUID.randomUUID()) + " tasks with random id");
+        taskService.print();
+
         // delete task test3
-        taskService.deleteTask(new FindPatternTask(newTaskIds[2]));
+        System.out.println("Deleted " + taskService.deleteTask(newTaskIds[2]) + " tasks with id=" + newTaskIds[2]);
         taskService.print();
 
         // delete task with name Test5
-        taskService.deleteTask(new FindPatternTask("Test5"));
+        System.out.println("Deleted " + taskService.deleteTaskByName("Test5") + " tasks with name=Test5");
         taskService.print();
 
         // delete task with owner Den7
-        taskService.deleteTask(new FindPatternTask(null, "Den7", null, null, null));
+        System.out.println("Deleted " + taskService.deleteTaskByOwner("Den7") + " tasks with owner=Den7");
         taskService.print();
+
+        // delete task with status Open
+        System.out.println("Deleted " + taskService.deleteTaskByPattern(new FindPatternTask(null, null, null, null, Task.TaskStatus.Open)) + " tasks with status=Open");
+        taskService.print();
+
+
 
     }
 }

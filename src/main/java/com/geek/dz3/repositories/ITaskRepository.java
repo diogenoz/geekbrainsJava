@@ -1,17 +1,20 @@
 package com.geek.dz3.repositories;
 
 
-import com.geek.dz3.entities.IFindable;
+import com.geek.dz3.entities.FindPatternTask;
+import com.geek.dz3.entities.Task;
 
 public interface ITaskRepository {
-    boolean isAllowedAddNewItem();
+    boolean isFull();
 
-    boolean addItem(IFindable item);
+    boolean addTask(Task task);
 
-    IFindable[] getItems();
+    Task[] getTasks();
 
-    void deleteItem(IFindable obj);
+    int deleteTasks(FindPatternTask findPatternTask);
 
-    IFindable[] findItems(IFindable obj);
+    Task[] findTasks(FindPatternTask findPatternTask);
+
+    boolean isEmpty();
 }
 

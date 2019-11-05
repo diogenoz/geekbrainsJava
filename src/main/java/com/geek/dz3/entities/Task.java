@@ -2,7 +2,7 @@ package com.geek.dz3.entities;
 
 import java.util.UUID;
 
-public class Task implements IFindable {
+public class Task {
 
     public enum TaskStatus {
         Open("Open"), InProgress("In Progress"), Done("Done");
@@ -49,7 +49,6 @@ public class Task implements IFindable {
         return this.id == otherTask.id || this.name.equals(otherTask.name);
     }
 
-    @Override
     public boolean findByPatternObj(Object obj) {
         if (this == obj) {
             return true;
