@@ -1,19 +1,19 @@
 package com.geek.dz3.repositories;
 
-import com.geek.dz3.entities.IComparable;
+import com.geek.dz3.entities.IFindable;
 
 public class TaskRepository implements ITaskRepository {
-    private IComparable[] items;
+    private IFindable[] items;
     private int itemCount = 0;
 
     @Override
-    public boolean isAllowedAddNewitem() {
+    public boolean isAllowedAddNewItem() {
         return itemCount < this.items.length;
     }
 
     @Override
-    public boolean addItem(IComparable item) {
-        if (isAllowedAddNewitem()) {
+    public boolean addItem(IFindable item) {
+        if (isAllowedAddNewItem()) {
             for (int i = 0; i < this.items.length; i++) {
                 if (this.items[i] == null) {
                     this.items[i] = item;
@@ -26,11 +26,11 @@ public class TaskRepository implements ITaskRepository {
     }
 
     public TaskRepository(int itemCount) {
-        this.items = new IComparable[itemCount];
+        this.items = new IFindable[itemCount];
     }
 
     @Override
-    public IComparable[] getItems() {
+    public IFindable[] getItems() {
         return this.items;
     }
 
@@ -38,7 +38,7 @@ public class TaskRepository implements ITaskRepository {
         Integer[] founditems = new Integer[this.items.length];
         int founditemCount = 0;
         for (int i = 0; i < this.items.length; i++) {
-            if (this.items[i] != null && this.items[i].compareTo(obj)) {
+            if (this.items[i] != null && this.items[i].findByPatternObj(obj)) {
                 founditems[founditemCount] = i;
             }
             founditemCount++;
@@ -47,7 +47,7 @@ public class TaskRepository implements ITaskRepository {
     }
 
     @Override
-    public void deleteItem(IComparable obj) {
+    public void deleteItem(IFindable obj) {
         Integer[] founditems = finditems(obj);
         for (Integer founditem : founditems) {
             if (founditem != null) {
@@ -58,10 +58,10 @@ public class TaskRepository implements ITaskRepository {
     }
 
     @Override
-    public IComparable[] findItems(IComparable obj) {
+    public IFindable[] findItems(IFindable obj) {
         int findResultsCount = 0;
         Integer[] foundItems = finditems(obj);
-        IComparable[] findResults = new IComparable[foundItems.length];
+        IFindable[] findResults = new IFindable[foundItems.length];
         for (Integer foundItem : foundItems) {
             if (foundItem != null) {
                 findResults[findResultsCount] = this.items[foundItem];

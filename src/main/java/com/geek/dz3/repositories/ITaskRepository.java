@@ -1,17 +1,17 @@
 package com.geek.dz3.repositories;
 
 
-import com.geek.dz3.entities.IComparable;
+import com.geek.dz3.entities.IFindable;
 
 public interface ITaskRepository {
-    boolean isAllowedAddNewitem();
+    boolean isAllowedAddNewItem();
 
-    boolean addItem(IComparable item);
+    boolean addItem(IFindable item);
 
-    IComparable[] getItems();
+    IFindable[] getItems();
 
-    void deleteItem(IComparable obj);
+    void deleteItem(IFindable obj);
 
-    IComparable[] findItems(IComparable obj);
+    IFindable[] findItems(IFindable obj);
 }
 

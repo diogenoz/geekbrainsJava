@@ -2,7 +2,7 @@ package com.geek.dz3.entities;
 
 import java.util.UUID;
 
-public class Task implements IComparable {
+public class Task implements IFindable {
     public enum TaskStatus {
         Open("Open"), InProgress("In Progress"), Done("Done");
         private String statusName;
@@ -63,7 +63,7 @@ public class Task implements IComparable {
     }
 
     @Override
-    public boolean compareTo(Object obj) {
+    public boolean findByPatternObj(Object obj) {
         if (this == obj) {
             return true;
         } else if (obj == null) {

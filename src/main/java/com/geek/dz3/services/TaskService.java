@@ -1,6 +1,6 @@
 package com.geek.dz3.services;
 
-import com.geek.dz3.entities.IComparable;
+import com.geek.dz3.entities.IFindable;
 import com.geek.dz3.entities.Task;
 import com.geek.dz3.repositories.ITaskRepository;
 import com.geek.dz3.repositories.TaskRepository;
@@ -10,7 +10,7 @@ public class TaskService {
     int taskCount = 0;
 
     public void addTask(Task task) {
-        if (!repository.isAllowedAddNewitem()) {
+        if (!repository.isAllowedAddNewItem()) {
             System.out.println("Список задач заполнен");
         } else {
             boolean isTaskAdded = repository.addItem(task);
@@ -22,10 +22,10 @@ public class TaskService {
     }
 
     public void print() {
-        IComparable[] tasks = this.repository.getItems();
+        IFindable[] tasks = this.repository.getItems();
         if (tasks.length > 0) {
             System.out.println("Список задач:");
-            for (IComparable task : tasks) {
+            for (IFindable task : tasks) {
                 if (task != null) {
                     System.out.println((Task) task);
                 }
