@@ -32,6 +32,10 @@ public class TaskRepository implements ITaskRepository {
     }
 
     public TaskRepository(int taskCount) {
+        if (taskCount <= 0) {
+            throw new RuntimeException("Количство задач в репозитории должно быть больше 0");
+        }
+
         this.tasks = new Task[taskCount];
     }
 
