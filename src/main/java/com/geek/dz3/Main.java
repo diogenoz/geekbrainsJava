@@ -3,6 +3,8 @@ package com.geek.dz3;
 
 import com.geek.dz3.entities.FindPatternTask;
 import com.geek.dz3.entities.Task;
+import com.geek.dz3.exceptions.MyArrayDataException;
+import com.geek.dz3.exceptions.MyArraySizeException;
 import com.geek.dz3.services.TaskService;
 
 import java.util.UUID;
@@ -42,7 +44,64 @@ public class Main {
         System.out.println("Deleted " + taskService.deleteTaskByPattern(new FindPatternTask(null, null, null, null, Task.TaskStatus.Open)) + " tasks with status=Open");
         taskService.print();
 
+        //dz#4
+        // Norm array
+        String[][] srcArray = new String[][]{{"1", "2", "3", "4"}, {"5", "6", "7", "8"}, {"9", "10", "11", "12"}, {"13", "14", "15", "16"}};
+        int sum = sumQuartArrayWithPrintExceptions(srcArray);
+        System.out.println("Excpected Sum of array:136, fact:" + sum);
 
+        // array with incorrect cols
+        String[][] srcArray1 = new String[][]{{"1", "2", "3", "4"}, {"5", "6", "7", "8"}, {"9", "10", "11", "12"}};
+        int sum1 = sumQuartArrayWithPrintExceptions(srcArray1);
+        System.out.println("Excpected Sum of array1:78, fact:" + sum1);
 
+        // array with incorrect rows
+        String[][] srcArray2 = new String[][]{{"1", "2", "3", "4"}, {"5", "6", "7", "8"}, {"9", "10", "11"}, {"13", "14", "15"}};
+        int sum2 = sumQuartArrayWithPrintExceptions(srcArray2);
+        System.out.println("Excpected Sum of array2:108, fact:" + sum2);
+
+        // array with incorrect data
+        String[][] srcArray3 = new String[][]{{"1", "2", "3", "4"}, {"5", "6", "7test", "8"}, {"9", "10", "11", "12"}, {"13", "14", "15", "16"}};
+        int sum3 = sumQuartArrayWithPrintExceptions(srcArray3);
+        System.out.println("Excpected Sum of array3:0, fact:" + sum3);
+
+    }
+
+    protected static int sumQuartArrayWithPrintExceptions(String[][] srcArray) {
+        int sum = 0;
+        try {
+            sum = sumQuarterArray(srcArray);
+        } catch (MyArraySizeException e) {
+            System.out.println("Incorrect array dimension");
+        } catch (MyArrayDataException e) {
+            System.out.println("Incorrect data format, col:" + e.getCol() + ", row:" + e.getRow());
+        }
+        return sum;
+    }
+
+    //dz#4
+    protected static int sumQuarterArray(String[][] srcArray) throws MyArrayDataException, MyArraySizeException {
+        boolean isIncorrectColsDimension = false;
+        boolean isIncorrectRowsDimension = false;
+        if (srcArray.length != 4) {
+            throw new MyArraySizeException("Входящий массив имеет размерность, отличную от 4х4");
+        } else {
+            for (int i = 0; i < srcArray.length; i++) {
+                if (srcArray[i].length != 4) {
+                    throw new MyArraySizeException("Входящий массив имеет размерность, отличную от 4х4");
+                }
+            }
+        }
+        int sum = 0;
+        for (int i = 0; i < srcArray.length; i++) {
+            for (int j = 0; j < srcArray[i].length; j++) {
+                try {
+                    sum += Integer.parseInt(srcArray[i][j]);
+                } catch (NumberFormatException e) {
+                    throw new MyArrayDataException(e.getMessage(), i, j);
+                }
+            }
+        }
+        return sum;
     }
 }
