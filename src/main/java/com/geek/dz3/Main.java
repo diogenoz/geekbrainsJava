@@ -84,12 +84,11 @@ public class Main {
         boolean isIncorrectColsDimension = false;
         boolean isIncorrectRowsDimension = false;
         if (srcArray.length != 4) {
-            isIncorrectColsDimension = true;
+            throw new MyArraySizeException("Входящий массив имеет размерность, отличную от 4х4");
         } else {
             for (int i = 0; i < srcArray.length; i++) {
                 if (srcArray[i].length != 4) {
-                    isIncorrectRowsDimension = true;
-                    break;
+                    throw new MyArraySizeException("Входящий массив имеет размерность, отличную от 4х4");
                 }
             }
         }
