@@ -6,6 +6,9 @@ import com.geek.dz3.entities.Task;
 import com.geek.dz3.exceptions.MyArrayDataException;
 import com.geek.dz3.exceptions.MyArraySizeException;
 import com.geek.dz3.services.TaskService;
+import com.geek.dz5.Apple;
+import com.geek.dz5.Box;
+import com.geek.dz5.Orange;
 
 import java.util.UUID;
 
@@ -13,7 +16,7 @@ public class Main {
     public static void main(String[] args) {
         int taskCount = 10;
         UUID[] newTaskIds = new UUID[taskCount];
-        TaskService taskService = new TaskService(taskCount);
+        TaskService taskService = new TaskService();
         taskService.print();
         for (int i = 0; i < taskCount; i++) {
             Task newTask = new Task("Test" + i, "Den" + i, "Ivan" + i, "Test11");
@@ -21,12 +24,14 @@ public class Main {
             newTaskIds[i] = newTask.getId();
         }
         taskService.print();
-        // should print error
         taskService.addTask(new Task("Test" + taskCount + 1, "Den11", "Ivan0", "Test11"));
 
         // delete task by random Id
-        System.out.println("Deleted " + taskService.deleteTask(UUID.randomUUID()) + " tasks with random id");
-        taskService.print();
+        try {
+            System.out.println("Deleted " + taskService.deleteTask(UUID.randomUUID()) + " tasks with random id");
+        } catch (RuntimeException e) {
+            System.out.println("Task with random id don't deleted");
+        }
 
         // delete task test3
         System.out.println("Deleted " + taskService.deleteTask(newTaskIds[2]) + " tasks with id=" + newTaskIds[2]);
@@ -41,7 +46,11 @@ public class Main {
         taskService.print();
 
         // delete task with status Open
-        System.out.println("Deleted " + taskService.deleteTaskByPattern(new FindPatternTask(null, null, null, null, Task.TaskStatus.Open)) + " tasks with status=Open");
+        System.out.println("Deleted one " + taskService.deleteTaskByPattern(new FindPatternTask(null, null, null, null, Task.TaskStatus.Open)) + " tasks with status=Open");
+        taskService.print();
+
+        // update task with id = 4
+        System.out.println("Update " + taskService.updateTask(new FindPatternTask(newTaskIds[4]), new Task("TesUpdate", "Den11", "Ivan0", "Test11")) + " tasks with id=4");
         taskService.print();
 
         //dz#4
@@ -65,6 +74,43 @@ public class Main {
         int sum3 = sumQuartArrayWithPrintExceptions(srcArray3);
         System.out.println("Excpected Sum of array3:0, fact:" + sum3);
 
+
+        //dz#5
+        //first fill boxes
+        Box<Apple> appleBox = new Box<Apple>();
+        for (int i = 0; i < 48; i++) {
+            appleBox.addFruit(new Apple());
+        }
+        Box<Orange> orangeBox = new Box<Orange>();
+        for (int i = 0; i < 20; i++) {
+            orangeBox.addFruit(new Orange());
+        }
+        //d.
+        System.out.println("Excpected weight of appleBox=48, fact:" + appleBox.getWeight());
+        System.out.println("Excpected count of appleBox=48, fact:" + appleBox.getCount());
+        System.out.println("Excpected weight of orangeBox=30, fact:" + orangeBox.getWeight());
+        System.out.println("Excpected count of orangeBox=20, fact:" + orangeBox.getCount());
+
+        //e.
+        System.out.println("Excpected compare weight of appleBox&orangeBox: false, fact:" + appleBox.compare(orangeBox));
+
+        //upfill orangeBox
+        for (int i = 0; i < 12; i++) {
+            orangeBox.addFruit(new Orange());
+        }
+        System.out.println("upfill orangeBox...");
+        System.out.println("Excpected compare weight of appleBox&orangeBox: true, fact:" + appleBox.compare(orangeBox));
+
+        //f.
+        Box<Orange> orangeBox2 = new Box<Orange>();
+        for (int i = 0; i < 20; i++) {
+            orangeBox2.addFruit(new Orange());
+        }
+        System.out.println("orangeBox before pour:" + orangeBox);
+        System.out.println("orangeBox2 before pour:" + orangeBox2);
+        orangeBox.pourToOtherBox(orangeBox2);
+        System.out.println("orangeBox after pour:" + orangeBox);
+        System.out.println("orangeBox2 after pour:" + orangeBox2);
     }
 
     protected static int sumQuartArrayWithPrintExceptions(String[][] srcArray) {
