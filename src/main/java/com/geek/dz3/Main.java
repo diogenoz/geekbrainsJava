@@ -92,9 +92,6 @@ public class Main {
                 }
             }
         }
-        if (isIncorrectColsDimension || isIncorrectRowsDimension) {
-            throw new MyArraySizeException("Входящий массив имеет размерность, отличную от 4х4");
-        }
         int sum = 0;
         for (int i = 0; i < srcArray.length; i++) {
             for (int j = 0; j < srcArray[i].length; j++) {
