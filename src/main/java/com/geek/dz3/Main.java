@@ -9,7 +9,11 @@ import com.geek.dz3.services.TaskService;
 import com.geek.dz5.Apple;
 import com.geek.dz5.Box;
 import com.geek.dz5.Orange;
+import com.geek.dz6.MyUniqueStringHelper;
+import com.geek.dz6.PhoneDictionary;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.UUID;
 
 public class Main {
@@ -111,6 +115,28 @@ public class Main {
         orangeBox.pourToOtherBox(orangeBox2);
         System.out.println("orangeBox after pour:" + orangeBox);
         System.out.println("orangeBox2 after pour:" + orangeBox2);
+
+        // dz#6
+        // dz#6 part 1
+        ArrayList<String> stringArray = new ArrayList<String>(Arrays.asList("apple", "orange", "mango", "banan", "tomato", "potato"
+                , "apple", "mango", "apple", "apple", "mango", "tomato", "table", "pencil", "table", "monitor", "steel", "fish"));
+        System.out.println("Unique words:" + MyUniqueStringHelper.getUniqueElements(stringArray));
+        System.out.println("Unique words frequence:" + MyUniqueStringHelper.getComputedWordsCount(stringArray));
+
+        // dz#6 part 2
+        PhoneDictionary phoneDictionary = new PhoneDictionary();
+        phoneDictionary.add("Lenin", "111111111");
+        phoneDictionary.add("Stalin", "2222222222");
+        phoneDictionary.add("Lenin", "111111112");
+        phoneDictionary.add("Lenin", "111111113");
+        phoneDictionary.add("Stalin", "2222222223");
+        phoneDictionary.add("Trozky", "3333333333");
+        phoneDictionary.add("Gorky", "4444444444");
+
+        System.out.println("Lenin's phones: " + phoneDictionary.get("Lenin"));
+        System.out.println("Stalin's phones: " + phoneDictionary.get("Stalin"));
+        System.out.println("Trozky's phones: " + phoneDictionary.get("Trozky"));
+
     }
 
     protected static int sumQuartArrayWithPrintExceptions(String[][] srcArray) {
