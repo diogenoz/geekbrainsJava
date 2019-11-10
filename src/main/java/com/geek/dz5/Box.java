@@ -23,17 +23,18 @@ public class Box<T extends Fruit> {
         return fruits.size();
     }
 
-    public boolean compare(Object o) {
-        if (o == this) {
+    public boolean compare(Box otherBox) {
+        if (otherBox == this) {
             return true;
-        } else if (!(o instanceof Box)) {
-            return false;
         }
-        Box otherBox = (Box) o;
         return this.getWeight() - otherBox.getWeight() < 0.001f;
     }
 
     public void pourToOtherBox(Box<T> otherBox) {
+        if (this == otherBox) {
+            throw new RuntimeException("Mustn't pour itself");
+        }
+
         Iterator<T> iterator = fruits.iterator();
         while (iterator.hasNext()) {
             otherBox.addFruit(iterator.next());
