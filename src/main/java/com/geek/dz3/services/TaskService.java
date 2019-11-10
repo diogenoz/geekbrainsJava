@@ -5,26 +5,23 @@ import com.geek.dz3.entities.Task;
 import com.geek.dz3.repositories.ITaskRepository;
 import com.geek.dz3.repositories.TaskRepository;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 public class TaskService {
-    ITaskRepository repository;
+    private ITaskRepository<Task> repository;
 
-    public void addTask(Task task) {
-        if (!repository.isFull()) {
-            System.out.println("Список задач заполнен");
-        } else {
-            boolean isTaskAdded = repository.addTask(task);
-        }
+    public TaskService() {
+        repository = new TaskRepository<Task>();
     }
 
-    public TaskService(int taskCount) {
-        this.repository = new TaskRepository(taskCount);
+    public boolean addTask(Task task) {
+        return repository.addTask(task);
     }
 
     public void print() {
         if (!this.repository.isEmpty()) {
-            Task[] tasks = this.repository.getTasks();
+            ArrayList<Task> tasks = this.repository.getTasks();
 
             System.out.println("Список задач:");
             for (Task task : tasks) {
@@ -37,19 +34,23 @@ public class TaskService {
         }
     }
 
-    public int deleteTask(UUID id) {
-        return repository.deleteTasks(new FindPatternTask(id));
+    public boolean deleteTask(UUID id) {
+        return repository.deleteTask(new FindPatternTask(id));
     }
 
-    public int deleteTaskByName(String name) {
-        return repository.deleteTasks(new FindPatternTask(name));
+    public boolean deleteTaskByName(String name) {
+        return repository.deleteTask(new FindPatternTask(name));
     }
 
-    public int deleteTaskByOwner(String owner) {
-        return repository.deleteTasks(new FindPatternTask(null, owner, null, null, null));
+    public boolean deleteTaskByOwner(String owner) {
+        return repository.deleteTask(new FindPatternTask(null, owner, null, null, null));
     }
 
-    public int deleteTaskByPattern(FindPatternTask findPatternTask) {
-        return repository.deleteTasks(findPatternTask);
+    public boolean deleteTaskByPattern(FindPatternTask findPatternTask) {
+        return repository.deleteTask(findPatternTask);
+    }
+
+    public Task updateTask(FindPatternTask findPattenTask, Task task) {
+        return repository.updateTask(findPattenTask, task);
     }
 }
