@@ -11,6 +11,10 @@ import com.geek.dz5.Box;
 import com.geek.dz5.Orange;
 import com.geek.dz6.MyUniqueStringHelper;
 import com.geek.dz6.PhoneDictionary;
+import com.geek.dz7.Car;
+import com.geek.dz7.Race;
+import com.geek.dz7.Road;
+import com.geek.dz7.Tunnel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -138,6 +142,19 @@ public class Main {
         System.out.println("Stalin's phones: " + phoneDictionary.get("Stalin"));
         System.out.println("Trozky's phones: " + phoneDictionary.get("Trozky"));
 
+        //dz#7
+        final int CARS_COUNT = 4;
+        System.out.println("ВАЖНОЕ ОБЪЯВЛЕНИЕ >>> Подготовка!!!");
+        Race race = new Race(new Road(60), new Tunnel(), new Road(40));
+        Car[] cars = new Car[CARS_COUNT];
+        for (int i = 0; i < cars.length; i++) {
+            cars[i] = new Car(race, 20 + (int) (Math.random() * 10));
+        }
+        for (int i = 0; i < cars.length; i++) {
+            new Thread(cars[i]).start();
+        }
+        System.out.println("ВАЖНОЕ ОБЪЯВЛЕНИЕ >>> Гонка началась!!!");
+        System.out.println("ВАЖНОЕ ОБЪЯВЛЕНИЕ >>> Гонка закончилась!!!");
     }
 
     protected static int sumQuartArrayWithPrintExceptions(String[][] srcArray) {
