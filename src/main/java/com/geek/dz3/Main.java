@@ -126,6 +126,7 @@ public class Main {
         // dz#6 part 2
         PhoneDictionary phoneDictionary = new PhoneDictionary();
         phoneDictionary.add("Lenin", "111111111");
+        phoneDictionary.add("Lenin", "111111111");
         phoneDictionary.add("Stalin", "2222222222");
         phoneDictionary.add("Lenin", "111111112");
         phoneDictionary.add("Lenin", "111111113");
