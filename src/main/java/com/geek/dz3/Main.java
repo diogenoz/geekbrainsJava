@@ -19,12 +19,12 @@ import com.geek.dz7.Tunnel;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.UUID;
+import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
-import java.util.concurrent.Semaphore;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws BrokenBarrierException, InterruptedException {
         int taskCount = 10;
         UUID[] newTaskIds = new UUID[taskCount];
         TaskService taskService = new TaskService();
@@ -147,18 +147,22 @@ public class Main {
 
         //dz#7
         final int CARS_COUNT = 4;
-        Car.cb = new CyclicBarrier(CARS_COUNT);
-        Tunnel.smp = new Semaphore(Math.round(CARS_COUNT / 2));
+        CyclicBarrier cb = new CyclicBarrier(CARS_COUNT + 1);
         Car.winnerLock = new ReentrantLock();
         System.out.println("ВАЖНОЕ ОБЪЯВЛЕНИЕ >>> Подготовка!!!");
-        Race race = new Race(new Road(60), new Tunnel(), new Road(40));
+        Race race = new Race(new Road(60), new Tunnel(Math.round(CARS_COUNT / 2)), new Road(40));
         Car[] cars = new Car[CARS_COUNT];
         for (int i = 0; i < cars.length; i++) {
-            cars[i] = new Car(race, 20 + (int) (Math.random() * 10));
+            cars[i] = new Car(race, 20 + (int) (Math.random() * 10), cb);
         }
         for (int i = 0; i < cars.length; i++) {
             new Thread(cars[i]).start();
         }
+        cb.await();
+        System.out.println("ВАЖНОЕ ОБЪЯВЛЕНИЕ >>> Гонка началась!!!");
+        cb.await();
+        cb.await();
+        System.out.println("ВАЖНОЕ ОБЪЯВЛЕНИЕ >>> Гонка закончилась!!!");
     }
 
     protected static int sumQuartArrayWithPrintExceptions(String[][] srcArray) {
