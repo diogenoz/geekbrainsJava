@@ -5,15 +5,21 @@ import java.util.UUID;
 public class Task {
 
     public enum TaskStatus {
-        Open("Open"), InProgress("In Progress"), Done("Done");
+        Open("Open", 1), InProgress("In Progress", 2), Done("Done", 3);
         private String statusName;
+        private int prior;
 
         public String getStatusName() {
             return statusName;
         }
 
-        TaskStatus(String statusName) {
+        public int getPrior() {
+            return prior;
+        }
+
+        TaskStatus(String statusName, int prior) {
             this.statusName = statusName;
+            this.prior = prior;
         }
     }
 
@@ -74,11 +80,11 @@ public class Task {
         return description;
     }
 
-    TaskStatus getStatus() {
+    public TaskStatus getStatus() {
         return status;
     }
 
-    void setStatus(TaskStatus status) {
+    public void setStatus(TaskStatus status) {
         this.status = status;
     }
 }

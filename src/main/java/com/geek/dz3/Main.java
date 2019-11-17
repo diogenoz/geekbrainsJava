@@ -11,31 +11,51 @@ import com.geek.dz5.Box;
 import com.geek.dz5.Orange;
 import com.geek.dz6.MyUniqueStringHelper;
 import com.geek.dz6.PhoneDictionary;
-import com.geek.dz7.Car;
-import com.geek.dz7.Race;
-import com.geek.dz7.Road;
-import com.geek.dz7.Tunnel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.UUID;
 import java.util.concurrent.BrokenBarrierException;
-import java.util.concurrent.CyclicBarrier;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class Main {
     public static void main(String[] args) throws BrokenBarrierException, InterruptedException {
         int taskCount = 10;
         UUID[] newTaskIds = new UUID[taskCount];
         TaskService taskService = new TaskService();
+
         taskService.print();
         for (int i = 0; i < taskCount; i++) {
             Task newTask = new Task("Test" + i, "Den" + i, "Ivan" + i, "Test11");
+            if (i == 1 || i == 6 || i == 7) {
+                newTask.setStatus(Task.TaskStatus.InProgress);
+            }
+            if (i == 2 || i == 5 || i == 8 || i == 9) {
+                newTask.setStatus(Task.TaskStatus.Done);
+            }
             taskService.addTask(newTask);
             newTaskIds[i] = newTask.getId();
         }
         taskService.print();
         taskService.addTask(new Task("Test" + taskCount + 1, "Den11", "Ivan0", "Test11"));
+
+        // dz#8
+        System.out.println("----------------dz8--------------------");
+        ArrayList<Task> inProgressTasks = taskService.findByStatus(Task.TaskStatus.InProgress);
+        taskService.print(inProgressTasks, "inProgressTasks");
+        ArrayList<Task> doneTasks = taskService.findByStatus(Task.TaskStatus.Done);
+        taskService.print(doneTasks, "doneTasks");
+
+        boolean isTask1Exists = taskService.isTaskExists(newTaskIds[3]);
+        System.out.println("Excpected isTask1Exists:true, fact:" + isTask1Exists);
+
+        boolean isTask2Exists = taskService.isTaskExists(UUID.randomUUID());
+        System.out.println("Excpected isTask2Exists:false, fact:" + isTask2Exists);
+
+        taskService.print(taskService.getSortedTasks(), "getSortedTasks");
+
+        System.out.println("Excpected inProgress taskCount:3, fact:" + taskService.computeTaskCountWithStatus(Task.TaskStatus.InProgress));
+        System.out.println("Excpected done taskCount:4, fact:" + taskService.computeTaskCountWithStatus(Task.TaskStatus.Done));
+
 
         // delete task by random Id
         try {
@@ -146,7 +166,7 @@ public class Main {
         System.out.println("Trozky's phones: " + phoneDictionary.get("Trozky"));
 
         //dz#7
-        final int CARS_COUNT = 4;
+        /*final int CARS_COUNT = 4;
         CyclicBarrier cb = new CyclicBarrier(CARS_COUNT + 1);
         Car.winnerLock = new ReentrantLock();
         System.out.println("ВАЖНОЕ ОБЪЯВЛЕНИЕ >>> Подготовка!!!");
@@ -163,6 +183,7 @@ public class Main {
         cb.await();
         cb.await();
         System.out.println("ВАЖНОЕ ОБЪЯВЛЕНИЕ >>> Гонка закончилась!!!");
+         */
     }
 
     protected static int sumQuartArrayWithPrintExceptions(String[][] srcArray) {
