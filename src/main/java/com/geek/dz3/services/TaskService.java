@@ -78,7 +78,7 @@ public class TaskService {
 
     public boolean isTaskExists(UUID id) {
         return repository.getTasks().stream()
-                .anyMatch(task -> task.getId() == id);
+                .anyMatch(task -> task.getId().equals(id));
     }
 
     public ArrayList<Task> getSortedTasks() {
