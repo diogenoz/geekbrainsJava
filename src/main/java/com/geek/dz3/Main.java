@@ -12,6 +12,7 @@ import com.geek.dz5.Orange;
 import com.geek.dz6.MyUniqueStringHelper;
 import com.geek.dz6.PhoneDictionary;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.UUID;
@@ -184,6 +185,34 @@ public class Main {
         cb.await();
         System.out.println("ВАЖНОЕ ОБЪЯВЛЕНИЕ >>> Гонка закончилась!!!");
          */
+
+        // dz#8
+        ArrayList<Task> tasks;
+        String outDir = "." + File.separator + "src" + File.separator + "out";
+        System.out.println(outDir);
+        String outFile;
+        //JSON library Json-simple
+        outFile = outDir + File.separator + "tasks.json";
+        System.out.println(outFile);
+        taskService.exportToJsonFile(new File(outFile));
+
+        tasks = taskService.importFromJsonFile(new File(outFile));
+        taskService.print(tasks, "Import From Json Tasks");
+
+        //Serialize
+        outFile = outDir + File.separator + "tasks.dat";
+        taskService.exportToFile(new File(outFile));
+
+        tasks = taskService.importFromFile(new File(outFile));
+        taskService.print(tasks, "Imported Serialized Tasks");
+
+        //CSV library Super CSV
+        outFile = outDir + File.separator + "tasks.csv";
+        taskService.exportToCsvFile(new File(outFile));
+
+        tasks = taskService.importFromCsvFile(new File(outFile));
+        taskService.print(tasks, "Imported Csv Tasks");
+
     }
 
     protected static int sumQuartArrayWithPrintExceptions(String[][] srcArray) {

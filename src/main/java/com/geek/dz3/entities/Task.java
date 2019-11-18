@@ -1,26 +1,27 @@
 package com.geek.dz3.entities;
 
+import org.json.simple.JSONStreamAware;
+import org.json.simple.JSONValue;
+
+import java.io.IOException;
+import java.io.Serializable;
+import java.io.Writer;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.UUID;
 
-public class Task {
+public class Task implements Serializable, JSONStreamAware {
 
-    public enum TaskStatus {
-        Open("Open", 1), InProgress("In Progress", 2), Done("Done", 3);
-        private String statusName;
-        private int prior;
-
-        public String getStatusName() {
-            return statusName;
-        }
-
-        public int getPrior() {
-            return prior;
-        }
-
-        TaskStatus(String statusName, int prior) {
-            this.statusName = statusName;
-            this.prior = prior;
-        }
+    public static Task fromJSONObject(Map jsonObject) {
+        Task task = new Task();
+        task.id = UUID.fromString(jsonObject.get("id").toString());
+        task.name = jsonObject.get("name").toString();
+        task.owner = jsonObject.get("name").toString();
+        ;
+        task.assignee = jsonObject.get("name").toString();
+        task.description = jsonObject.get("name").toString();
+        task.status = TaskStatus.fromString(jsonObject.get("status").toString());
+        return task;
     }
 
     UUID id;
@@ -60,7 +61,7 @@ public class Task {
         return String.format("%s, %s, %s, %s, %s", this.id, this.name, this.owner, this.assignee, this.status.getStatusName());
     }
 
-    String getName() {
+    public String getName() {
         return name;
     }
 
@@ -68,16 +69,16 @@ public class Task {
         return id;
     }
 
-    String getOwner() {
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getOwner() {
         return owner;
     }
 
-    String getAssignee() {
-        return assignee;
-    }
-
-    String getDescription() {
-        return description;
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 
     public TaskStatus getStatus() {
@@ -87,4 +88,67 @@ public class Task {
     public void setStatus(TaskStatus status) {
         this.status = status;
     }
+
+    public String getAssignee() {
+        return assignee;
+    }
+
+    public void setAssignee(String assignee) {
+        this.assignee = assignee;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    @Override
+    public void writeJSONString(Writer writer) throws IOException {
+        LinkedHashMap obj = new LinkedHashMap();
+        obj.put("id", this.id.toString());
+        obj.put("name", this.name);
+        obj.put("owner", this.owner);
+        obj.put("assignee", this.assignee);
+        obj.put("description", this.description);
+        obj.put("status", this.status.getStatusName());
+
+        JSONValue.writeJSONString(obj, writer);
+    }
+
+    public enum TaskStatus {
+        Open("Open", 1), InProgress("In Progress", 2), Done("Done", 3);
+        private String statusName;
+        private int prior;
+
+        public String getStatusName() {
+            return statusName;
+        }
+
+        public int getPrior() {
+            return prior;
+        }
+
+        public static TaskStatus fromString(String statusString) {
+            for (TaskStatus taskStatus : TaskStatus.values()) {
+                if (taskStatus.getStatusName().equals(statusString)) {
+                    return taskStatus;
+                }
+            }
+            throw new RuntimeException("Not found task Status");
+        }
+
+        TaskStatus(String statusName, int prior) {
+            this.statusName = statusName;
+            this.prior = prior;
+        }
+
+    }
+
 }
