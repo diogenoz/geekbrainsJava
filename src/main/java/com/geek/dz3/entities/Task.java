@@ -12,6 +12,15 @@ import java.util.UUID;
 
 public class Task implements Serializable, JSONStreamAware {
 
+    public Task(UUID id, String name, String owner, String assignee, String description, TaskStatus status) {
+        this.id = id;
+        this.name = name;
+        this.owner = owner;
+        this.assignee = assignee;
+        this.description = description;
+        this.status = TaskStatus.Open;
+    }
+
     public static Task fromJSONObject(Map jsonObject) {
         Task task = new Task();
         task.id = UUID.fromString(jsonObject.get("id").toString());

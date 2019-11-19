@@ -1,17 +1,19 @@
 package com.geek.dz3.repositories;
 
 
+import com.geek.dz3.entities.Task;
+
 import java.util.ArrayList;
 
 public interface ITaskRepository<T> {
 
-    boolean addTask(T task);
+    boolean addTask(Task task);
 
-    ArrayList<T> getTasks();
+    ArrayList getTasks();
 
-    T updateTask(T findPattenTask, T newTask);
+    Task updateTask(Task findPattenTask, Task newTask);
 
-    boolean deleteTask(T findTask);
+    boolean deleteTask(Task findTask);
 
     boolean isEmpty();
 }

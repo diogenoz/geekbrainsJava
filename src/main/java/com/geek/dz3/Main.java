@@ -41,9 +41,9 @@ public class Main {
 
         // dz#8
         System.out.println("----------------dz8--------------------");
-        ArrayList<Task> inProgressTasks = taskService.findByStatus(Task.TaskStatus.InProgress);
+        ArrayList inProgressTasks = taskService.findByStatus(Task.TaskStatus.InProgress);
         taskService.print(inProgressTasks, "inProgressTasks");
-        ArrayList<Task> doneTasks = taskService.findByStatus(Task.TaskStatus.Done);
+        ArrayList doneTasks = taskService.findByStatus(Task.TaskStatus.Done);
         taskService.print(doneTasks, "doneTasks");
 
         boolean isTask1Exists = taskService.isTaskExists(newTaskIds[3]);
@@ -187,7 +187,7 @@ public class Main {
          */
 
         // dz#8
-        ArrayList<Task> tasks;
+        ArrayList tasks;
         String outDir = "." + File.separator + "src" + File.separator + "out";
         System.out.println(outDir);
         String outFile;

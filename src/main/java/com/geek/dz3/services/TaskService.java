@@ -3,7 +3,7 @@ package com.geek.dz3.services;
 import com.geek.dz3.entities.FindPatternTask;
 import com.geek.dz3.entities.Task;
 import com.geek.dz3.repositories.ITaskRepository;
-import com.geek.dz3.repositories.TaskRepository;
+import com.geek.dz3.repositories.TaskJdbcRepository;
 import com.geek.dz3.services.csvprocessors.TaskStatusCsvProcessor;
 import com.geek.dz3.services.csvprocessors.UuidCsvProcessor;
 import org.json.simple.JSONArray;
@@ -19,14 +19,16 @@ import org.supercsv.io.ICsvBeanWriter;
 import org.supercsv.prefs.CsvPreference;
 
 import java.io.*;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.UUID;
 
 public class TaskService {
-    private ITaskRepository<Task> repository;
+    private ITaskRepository repository;
 
     public TaskService() {
-        repository = new TaskRepository<Task>();
+        repository = new TaskJdbcRepository();
     }
 
     public boolean addTask(Task task) {
@@ -35,23 +37,22 @@ public class TaskService {
 
     public void print() {
         if (!this.repository.isEmpty()) {
-            ArrayList<Task> tasks = this.repository.getTasks();
+            ArrayList tasks = this.repository.getTasks();
 
             System.out.println("Список задач:");
-            for (Task task : tasks) {
-                if (task != null) {
-                    System.out.println(task);
-                }
+            Iterator iterator = tasks.iterator();
+            while (iterator.hasNext()) {
+                System.out.println(iterator.next());
             }
         } else {
             System.out.println("Список задач пуст");
         }
     }
 
-    public void print(ArrayList<Task> tasks, String title) {
+    public void print(ArrayList tasks, String title) {
         if (!tasks.isEmpty()) {
             System.out.println("Список задач:" + title);
-            for (Task task : tasks) {
+            for (Object task : tasks) {
                 if (task != null) {
                     System.out.println(task);
                 }
@@ -81,34 +82,34 @@ public class TaskService {
         return repository.updateTask(findPattenTask, task);
     }
 
-    public ArrayList<Task> findByStatus(Task.TaskStatus status) {
-        return (ArrayList<Task>) repository.getTasks().stream()
-                .filter(task -> task.getStatus() == status)
-                .collect(Collectors.toList()
-                );
+    public ArrayList findByStatus(Task.TaskStatus status) {
+        return repository.getTasks()
+                //.stream()
+                //.filter( task -> (Task) task.getStatus().equals(status))
+                //.collect(Collectors.toList()
+                //)
+                ;
     }
 
     public boolean isTaskExists(UUID id) {
-        return repository.getTasks().stream()
-                .anyMatch(task -> task.getId().equals(id));
+        return repository.getTasks().isEmpty();
+        //.stream()
+        //.anyMatch(task -> (Task) task.getId().equals(id));
     }
 
-    public ArrayList<Task> getSortedTasks() {
-        return (ArrayList<Task>) repository.getTasks().stream()
-                .sorted(new Comparator<Task>() {
-                            @Override
-                            public int compare(Task t1, Task t2) {
-                                return t1.getStatus().getPrior() - t2.getStatus().getPrior();
-                            }
-                        }
-                ).collect(Collectors.toList()
-                );
+    public ArrayList getSortedTasks() {
+        return repository.getTasks();
+        //.stream()
+        //.sorted((Comparator) (t1, t2) -> (Task) t1.getStatus().getPrior() - (Task) t2.getStatus().getPrior()
+        //).collect(Collectors.toList()
+        //);
     }
 
     public long computeTaskCountWithStatus(Task.TaskStatus status) {
-        return (int) repository.getTasks().stream()
-                .filter(task -> task.getStatus() == status)
-                .count();
+        return (int) repository.getTasks().size();
+        //.stream()
+        //.filter(task -> task.getStatus() == status)
+        //.count();
     }
 
     public void exportToJsonFile(File file) {
@@ -125,8 +126,8 @@ public class TaskService {
         }
     }
 
-    public ArrayList<Task> importFromJsonFile(File file) {
-        ArrayList<Task> tasks = new ArrayList<>();
+    public ArrayList importFromJsonFile(File file) {
+        ArrayList tasks = new ArrayList();
         StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String str;
@@ -143,7 +144,7 @@ public class TaskService {
             JSONArray jsonTasks = (JSONArray) obj;
             Iterator iterator = jsonTasks.iterator();
             while (iterator.hasNext()) {
-                tasks.add((Task.fromJSONObject((Map) iterator.next())));
+                tasks.add((Task) (Task.fromJSONObject((Map) iterator.next())));
             }
         } catch (ParseException e) {
             e.printStackTrace();
@@ -153,7 +154,7 @@ public class TaskService {
 
 
     public void exportToFile(File file) {
-        ArrayList<Task> tasks = repository.getTasks();
+        ArrayList tasks = repository.getTasks();
         try (BufferedOutputStream writer = new BufferedOutputStream(new FileOutputStream(file))) {
             ObjectOutputStream out = new ObjectOutputStream(writer);
             out.writeObject(tasks);
@@ -162,11 +163,11 @@ public class TaskService {
         }
     }
 
-    public ArrayList<Task> importFromFile(File file) {
-        ArrayList<Task> tasks = new ArrayList<>();
+    public ArrayList importFromFile(File file) {
+        ArrayList tasks = new ArrayList();
         try (BufferedInputStream reader = new BufferedInputStream(new FileInputStream(file))) {
             ObjectInputStream in = new ObjectInputStream(reader);
-            tasks = (ArrayList<Task>) in.readObject();
+            tasks = (ArrayList) in.readObject();
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -186,7 +187,7 @@ public class TaskService {
     }
 
     public void exportToCsvFile(File file) {
-        ArrayList<Task> tasks = repository.getTasks();
+        ArrayList tasks = repository.getTasks();
         //ICsvListWriter writer = null;
         try (ICsvBeanWriter writer = new CsvBeanWriter(new FileWriter(file), CsvPreference.STANDARD_PREFERENCE)) {
             CellProcessor[] processors = getProcessors();
@@ -201,8 +202,8 @@ public class TaskService {
         }
     }
 
-    public ArrayList<Task> importFromCsvFile(File file) {
-        ArrayList<Task> tasks = new ArrayList<>();
+    public ArrayList importFromCsvFile(File file) {
+        ArrayList tasks = new ArrayList();
         try (ICsvBeanReader reader = new CsvBeanReader(new FileReader(file), CsvPreference.STANDARD_PREFERENCE)) {
             CellProcessor[] processors = getProcessors();
             String[] header = reader.getHeader(true);
