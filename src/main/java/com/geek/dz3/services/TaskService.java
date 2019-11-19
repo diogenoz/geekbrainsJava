@@ -4,10 +4,22 @@ import com.geek.dz3.entities.FindPatternTask;
 import com.geek.dz3.entities.Task;
 import com.geek.dz3.repositories.ITaskRepository;
 import com.geek.dz3.repositories.TaskRepository;
+import com.geek.dz3.services.csvprocessors.TaskStatusCsvProcessor;
+import com.geek.dz3.services.csvprocessors.UuidCsvProcessor;
+import org.json.simple.JSONArray;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+import org.supercsv.cellprocessor.Optional;
+import org.supercsv.cellprocessor.constraint.NotNull;
+import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.io.CsvBeanReader;
+import org.supercsv.io.CsvBeanWriter;
+import org.supercsv.io.ICsvBeanReader;
+import org.supercsv.io.ICsvBeanWriter;
+import org.supercsv.prefs.CsvPreference;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.UUID;
+import java.io.*;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class TaskService {
@@ -99,5 +111,109 @@ public class TaskService {
                 .count();
     }
 
+    public void exportToJsonFile(File file) {
+        ArrayList<Task> tasks = repository.getTasks();
+        JSONArray JSONTasks = new JSONArray();
+        JSONTasks.addAll(tasks);
+        try (StringWriter writer = new StringWriter()) {
+            JSONTasks.writeJSONString(writer);
+            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file));
+            bufferedWriter.write(writer.toString());
+            bufferedWriter.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public ArrayList<Task> importFromJsonFile(File file) {
+        ArrayList<Task> tasks = new ArrayList<>();
+        StringBuilder stringBuilder = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String str;
+            while ((str = reader.readLine()) != null) {
+                stringBuilder.append(str);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        JSONParser parser = new JSONParser();
+        try {
+            System.out.println(stringBuilder.toString());
+            Object obj = parser.parse(stringBuilder.toString());
+            JSONArray jsonTasks = (JSONArray) obj;
+            Iterator iterator = jsonTasks.iterator();
+            while (iterator.hasNext()) {
+                tasks.add((Task.fromJSONObject((Map) iterator.next())));
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return tasks;
+    }
+
+
+    public void exportToFile(File file) {
+        ArrayList<Task> tasks = repository.getTasks();
+        try (BufferedOutputStream writer = new BufferedOutputStream(new FileOutputStream(file))) {
+            ObjectOutputStream out = new ObjectOutputStream(writer);
+            out.writeObject(tasks);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public ArrayList<Task> importFromFile(File file) {
+        ArrayList<Task> tasks = new ArrayList<>();
+        try (BufferedInputStream reader = new BufferedInputStream(new FileInputStream(file))) {
+            ObjectInputStream in = new ObjectInputStream(reader);
+            tasks = (ArrayList<Task>) in.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return tasks;
+    }
+
+    private CellProcessor[] getProcessors() {
+        CellProcessor[] processors = new CellProcessor[]{
+                new UuidCsvProcessor(), // taskId (must be unique)
+                new NotNull(), // taskName
+                new Optional(), // owner
+                new Optional(), // assignee
+                new Optional(), // description
+                new TaskStatusCsvProcessor() // task
+        };
+        return processors;
+    }
+
+    public void exportToCsvFile(File file) {
+        ArrayList<Task> tasks = repository.getTasks();
+        //ICsvListWriter writer = null;
+        try (ICsvBeanWriter writer = new CsvBeanWriter(new FileWriter(file), CsvPreference.STANDARD_PREFERENCE)) {
+            CellProcessor[] processors = getProcessors();
+            String[] header = new String[]{"id", "name", "owner", "assignee", "description", "status"};
+            writer.writeHeader(header);
+            Iterator iterator = tasks.iterator();
+            while (iterator.hasNext()) {
+                writer.write(iterator.next(), header, processors);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public ArrayList<Task> importFromCsvFile(File file) {
+        ArrayList<Task> tasks = new ArrayList<>();
+        try (ICsvBeanReader reader = new CsvBeanReader(new FileReader(file), CsvPreference.STANDARD_PREFERENCE)) {
+            CellProcessor[] processors = getProcessors();
+            String[] header = reader.getHeader(true);
+            Task task;
+            while ((task = (Task) reader.read(Task.class, header, processors)) != null) {
+                tasks.add(task);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return tasks;
+    }
 
 }
