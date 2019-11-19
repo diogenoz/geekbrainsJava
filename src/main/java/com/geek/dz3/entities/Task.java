@@ -16,10 +16,9 @@ public class Task implements Serializable, JSONStreamAware {
         Task task = new Task();
         task.id = UUID.fromString(jsonObject.get("id").toString());
         task.name = jsonObject.get("name").toString();
-        task.owner = jsonObject.get("name").toString();
-        ;
-        task.assignee = jsonObject.get("name").toString();
-        task.description = jsonObject.get("name").toString();
+        task.owner = jsonObject.get("owner").toString();
+        task.assignee = jsonObject.get("assignee").toString();
+        task.description = jsonObject.get("description").toString();
         task.status = TaskStatus.fromString(jsonObject.get("status").toString());
         return task;
     }
