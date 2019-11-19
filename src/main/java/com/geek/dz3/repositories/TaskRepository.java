@@ -1,9 +1,11 @@
 package com.geek.dz3.repositories;
 
+import com.geek.dz3.entities.Task;
+
 import java.util.ArrayList;
 
-public class TaskRepository<T> implements ITaskRepository<T> {
-    private ArrayList<T> tasks = new ArrayList<T>();
+public class TaskRepository implements ITaskRepository {
+    private ArrayList tasks = new ArrayList();
 
     @Override
     public boolean isEmpty() {
@@ -11,26 +13,26 @@ public class TaskRepository<T> implements ITaskRepository<T> {
     }
 
     @Override
-    public boolean addTask(T task) {
+    public boolean addTask(Task task) {
         return tasks.add(task);
     }
 
     @Override
-    public ArrayList<T> getTasks() {
+    public ArrayList getTasks() {
         return this.tasks;
     }
 
     @Override
-    public T updateTask(T findPattenTask, T newTask) {
+    public Task updateTask(Task findPattenTask, Task newTask) {
         int pos = tasks.indexOf(findPattenTask);
         if (pos == -1) {
             throw new RuntimeException("Такой задачи для обновления не существует");
         }
         tasks.set(pos, newTask);
-        return tasks.get(pos);
+        return (Task) tasks.get(pos);
     }
     @Override
-    public boolean deleteTask(T findTask) {
+    public boolean deleteTask(Task findTask) {
         if (!tasks.contains(findTask)) {
             throw new RuntimeException("Такой задачи для удаления не существует");
         }
