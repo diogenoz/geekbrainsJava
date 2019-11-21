@@ -3,7 +3,7 @@ package com.geek.dz3.services;
 import com.geek.dz3.entities.FindPatternTask;
 import com.geek.dz3.entities.Task;
 import com.geek.dz3.repositories.ITaskRepository;
-import com.geek.dz3.repositories.TaskRepository;
+import com.geek.dz3.repositories.TaskSqlLiteRepository;
 import com.geek.dz3.services.csvprocessors.TaskStatusCsvProcessor;
 import com.geek.dz3.services.csvprocessors.UuidCsvProcessor;
 import org.json.simple.JSONArray;
@@ -28,7 +28,7 @@ public class TaskService {
     private ITaskRepository repository;
 
     public TaskService() {
-        repository = new TaskRepository();
+        repository = new TaskSqlLiteRepository();
     }
 
     public boolean addTask(Task task) {
