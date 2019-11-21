@@ -3,13 +3,13 @@ package com.geek.dz3.repositories;
 
 import com.geek.dz3.entities.Task;
 
-import java.util.ArrayList;
+import java.util.List;
 
-public interface ITaskRepository<T> {
+public interface ITaskRepository {
 
     boolean addTask(Task task);
 
-    ArrayList getTasks();
+    List getTasks();
 
     Task updateTask(Task findPattenTask, Task newTask);
 

@@ -3,6 +3,7 @@ package com.geek.dz3.repositories;
 import com.geek.dz3.entities.Task;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class TaskRepository implements ITaskRepository {
     private ArrayList tasks = new ArrayList();
@@ -18,7 +19,7 @@ public class TaskRepository implements ITaskRepository {
     }
 
     @Override
-    public ArrayList getTasks() {
+    public List getTasks() {
         return this.tasks;
     }
 

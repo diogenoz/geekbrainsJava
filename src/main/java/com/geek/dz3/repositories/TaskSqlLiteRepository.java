@@ -4,6 +4,7 @@ import com.geek.dz3.entities.Task;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class TaskSqlLiteRepository implements ITaskRepository {
@@ -74,7 +75,7 @@ public class TaskSqlLiteRepository implements ITaskRepository {
     }
 
     @Override
-    public ArrayList getTasks() {
+    public List getTasks() {
         ArrayList tasks = new ArrayList();
         try {
             connect();
