@@ -1,7 +1,7 @@
-package com.geek.dz3.services;
+package com.geek.dz11.services;
 
-import com.geek.dz3.entities.Task;
-import com.geek.dz3.repositories.ITaskRepository;
+import com.geek.dz11.entities.Task;
+import com.geek.dz11.repositories.ITaskRepository;
 
 import java.util.ArrayList;
 import java.util.Iterator;

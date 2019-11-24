@@ -1,7 +1,7 @@
-package com.geek.dz3.repositories;
+package com.geek.dz11.repositories;
 
 
-import com.geek.dz3.entities.Task;
+import com.geek.dz11.entities.Task;
 
 import java.util.List;
 
