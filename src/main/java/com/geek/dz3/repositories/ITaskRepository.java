@@ -11,10 +11,9 @@ public interface ITaskRepository {
 
     List getTasks();
 
-    Task updateTask(Task findPattenTask, Task newTask);
+    Task updateTask(Task udpatedTask);
 
     boolean deleteTask(Task findTask);
 
     boolean isEmpty();
 }
-

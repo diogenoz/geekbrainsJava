@@ -3,6 +3,7 @@ package com.geek.dz3.entities;
 import org.json.simple.JSONStreamAware;
 import org.json.simple.JSONValue;
 
+import javax.persistence.*;
 import java.io.IOException;
 import java.io.Serializable;
 import java.io.Writer;
@@ -10,6 +11,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 
+@Entity
+@Table(name = "task")
 public class Task implements Serializable, JSONStreamAware {
 
     public Task(UUID id, String name, String owner, String assignee, String description, TaskStatus status) {
@@ -32,11 +35,20 @@ public class Task implements Serializable, JSONStreamAware {
         return task;
     }
 
-    UUID id;
+    @Id
+    @GeneratedValue
+    @Column(name = "id")
+    Long id;
+
+    @Column(name = "id")
     String name;
+    @Column(name = "owner")
     String owner;
+    @Column(name = "assignee")
     String assignee;
+    @Column(name = "description")
     String description;
+
     TaskStatus status;
 
     public Task(String name, String owner, String assignee, String description) {
