@@ -2,16 +2,17 @@ package com.geek.dz11.services;
 
 import com.geek.dz11.entities.Task;
 import com.geek.dz11.repositories.ITaskRepository;
+import com.geek.dz11.repositories.PostgreTaskRepository;
+import org.hibernate.SessionFactory;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 public class TaskService {
     private ITaskRepository repository;
 
-    public TaskService() {
-        //    repository = new TaskRepository();
+    public TaskService(SessionFactory factory) {
+        repository = new PostgreTaskRepository(factory);
     }
 
     public boolean addTask(Task task) {
@@ -32,24 +33,23 @@ public class TaskService {
         }
     }
 
-    public void print(ArrayList tasks, String title) {
-        if (!tasks.isEmpty()) {
-            System.out.println("Список задач:" + title);
-            for (Object task : tasks) {
-                if (task != null) {
-                    System.out.println(task);
-                }
-            }
-        } else {
-            System.out.println("Список задач " + title + " пуст");
-        }
-    }
-
     public boolean deleteTask(Task task) {
         return repository.deleteTask(task);
     }
 
     public Task updateTask(Task updTask) {
         return repository.updateTask(updTask);
+    }
+
+    public List getEmployees() {
+        return repository.getTasks();
+    }
+
+    public Task findById(Long id) {
+        return repository.findById(id);
+    }
+
+    public Task findByName(String name) {
+        return repository.findByName(name);
     }
 }

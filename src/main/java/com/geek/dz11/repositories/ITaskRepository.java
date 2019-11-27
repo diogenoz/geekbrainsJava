@@ -13,7 +13,11 @@ public interface ITaskRepository {
 
     Task updateTask(Task udpatedTask);
 
-    boolean deleteTask(Task findTask);
+    Task findById(Long id);
+
+    Task findByName(String name);
+
+    boolean deleteTask(Task task);
 
     boolean isEmpty();
 }

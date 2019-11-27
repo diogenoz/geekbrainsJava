@@ -1,25 +1,45 @@
 package com.geek.dz11.entities;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
+@Entity
+@Table(name = "task")
+@NamedQueries({
+        @NamedQuery(name = "Task.findAll", query = "SELECT t FROM Task t"),
+        @NamedQuery(name = "Task.findById", query = "SELECT t FROM Task t WHERE t.id = :id"),
+        @NamedQuery(name = "Task.findByName", query = "SELECT t FROM Task t WHERE t.name = :name"),
+})
 public class Task implements Serializable {
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
+    @Column(name = "name")
+    @NotNull
     private String name;
-    private String owner;
-    private String assignee;
+    @ManyToOne
+    @JoinColumn(name = "owner")
+    private Employee owner;
+
+    @ManyToOne
+    @JoinColumn(name = "assignee")
+    private Employee assignee;
+
+    @Column(name = "description")
     private String description;
 
+    @Enumerated
     private TaskStatus status;
 
-    public Task(String name, String owner, String assignee, String description) {
+    public Task(String name, Employee owner, Employee assignee, String description) {
         this.name = name;
         this.owner = owner;
         this.assignee = assignee;
         this.description = description;
         this.status = TaskStatus.Open;
     }
-
 
     public Task() {
     }
@@ -34,7 +54,7 @@ public class Task implements Serializable {
             return false;
         }
         Task otherTask = (Task) obj;
-        return this.id == otherTask.id || this.name.equals(otherTask.name);
+        return this.id.equals(otherTask.id) || this.name.equals(otherTask.name);
     }
 
     @Override
@@ -44,6 +64,14 @@ public class Task implements Serializable {
 
     public void setStatus(TaskStatus status) {
         this.status = status;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public enum TaskStatus {
