@@ -3,16 +3,18 @@ package com.geek.dz11.repositories;
 import com.geek.dz11.entities.Employee;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@Repository
 public class PostgreEmployeeRepository implements IEmployeeRepository {
     private SessionFactory factory;
 
-    public PostgreEmployeeRepository(SessionFactory factory) {
-        this.factory = factory;
+    public PostgreEmployeeRepository() {
     }
 
     @Override
@@ -113,5 +115,10 @@ public class PostgreEmployeeRepository implements IEmployeeRepository {
             e.printStackTrace();
             return false;
         }
+    }
+
+    @Autowired
+    public void setFactory(SessionFactory factory) {
+        this.factory = factory;
     }
 }
