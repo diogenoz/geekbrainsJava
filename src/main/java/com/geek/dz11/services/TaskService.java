@@ -2,17 +2,17 @@ package com.geek.dz11.services;
 
 import com.geek.dz11.entities.Task;
 import com.geek.dz11.repositories.ITaskRepository;
-import com.geek.dz11.repositories.PostgreTaskRepository;
-import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Iterator;
 import java.util.List;
 
+@Service
 public class TaskService {
     private ITaskRepository repository;
 
-    public TaskService(SessionFactory factory) {
-        repository = new PostgreTaskRepository(factory);
+    public TaskService() {
     }
 
     public boolean addTask(Task task) {
@@ -51,5 +51,10 @@ public class TaskService {
 
     public Task findByName(String name) {
         return repository.findByName(name);
+    }
+
+    @Autowired
+    public void setRepository(ITaskRepository repository) {
+        this.repository = repository;
     }
 }

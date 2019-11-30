@@ -2,16 +2,17 @@ package com.geek.dz11.services;
 
 import com.geek.dz11.entities.Employee;
 import com.geek.dz11.repositories.IEmployeeRepository;
-import com.geek.dz11.repositories.PostgreEmployeeRepository;
 import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class EmployeeService {
     private IEmployeeRepository repository;
 
     public EmployeeService(SessionFactory factory) {
-        repository = new PostgreEmployeeRepository(factory);
     }
 
     public boolean addEmployee(Employee employee) {
@@ -33,4 +34,10 @@ public class EmployeeService {
     public Employee findByName(String name) {
         return repository.findByName(name);
     }
+
+    @Autowired
+    public void setRepository(IEmployeeRepository repository) {
+        this.repository = repository;
+    }
+
 }

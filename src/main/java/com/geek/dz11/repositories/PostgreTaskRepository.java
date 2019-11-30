@@ -3,16 +3,18 @@ package com.geek.dz11.repositories;
 import com.geek.dz11.entities.Task;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@Repository
 public class PostgreTaskRepository implements ITaskRepository {
     private SessionFactory factory;
 
-    public PostgreTaskRepository(SessionFactory factory) {
-        this.factory = factory;
+    public PostgreTaskRepository() {
     }
 
     @Override
@@ -128,5 +130,10 @@ public class PostgreTaskRepository implements ITaskRepository {
             e.printStackTrace();
             return false;
         }
+    }
+
+    @Autowired
+    public void setFactory(SessionFactory factory) {
+        this.factory = factory;
     }
 }
